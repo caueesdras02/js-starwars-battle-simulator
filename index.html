@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividade 02</title>
+
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            font-family: "Arial Narrow", Arial, sans-serif;
+        }
+
+        .highlight {
+            background-color: #333333;
+            color: #ffffff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .star {
+            position: absolute;
+            background-color: #fff;
+            width: 1px;
+            height: 1px;
+            border-radius: 50%;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #lutar {
+            background-color: #ff0000;
+            color: #ffffff;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        #lutar:hover {
+            background-color: #ff3333;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="container">
+        <h1>Selecionar Personagens</h1>
+        <div>
+            Jedi: <select id='selectJ'></select>
+            Sith: <select id='selectS'></select>
+        </div>
+
+        <button id="lutar">Lutar!</button>
+
+        <div id="respostas" style="display:none;">
+            <p class="highlight" id='pV'></p>
+            <p class="highlight" id='pJ'></p>
+            <p class="highlight" id='pS'></p>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+
+        var todos = [];
+
+        function Personagem(Tipo, Nome, Forca) {
+            this.Tipo = Tipo;
+            this.Nome = Nome;
+            this.Forca = Forca;
+        }
+
+        function DefinirForca() {
+            var minhaForca = 0;
+            for (var i = 0; i < 3; i++) {
+                minhaForca += Math.floor(Math.random() * 6 + 1);
+            }
+            return minhaForca;
+        }
+
+        todos.push(new Personagem('Jedi', 'Obi-Wan', DefinirForca()));
+        todos.push(new Personagem('Jedi', 'Yoda', DefinirForca()));
+        todos.push(new Personagem('Sith', 'Dath Vader', DefinirForca()));
+        todos.push(new Personagem('Sith', 'Darth Sidious', DefinirForca()));
+
+        //inserindo nomes nas listas de opções
+        $.each(todos, function(index, personagem) {
+            $('<option>').val(index).text(personagem.Nome).appendTo('#selectJ');
+            $('<option>').val(index).text(personagem.Nome).appendTo('#selectS');
+        });
+
+        function Lutar() {
+            //estado inicial da animação
+            $('#pV').html('').css({ 'font-size': '16px' });
+
+            var jIndex = $('#selectJ').val();
+            var sIndex = $('#selectS').val();
+            var j = todos[jIndex];
+            var s = todos[sIndex];
+
+            j.Forca = DefinirForca();
+            s.Forca = DefinirForca();
+
+            var Jedi = 0;
+            var Sith = 0;
+            for (var i = 0; i < 4; i++) {
+                Jedi += Math.floor(Math.random() * 6 + 1);
+                Sith += Math.floor(Math.random() * 6 + 1);
+            }
+
+            var resultado = "";
+            if (j.Forca > s.Forca) {
+                resultado = `O lado Jedi ganhou. Sua pontuação foi: ${Jedi} pontos`;
+            } else if (s.Forca > j.Forca) {
+                resultado = `O lado Sith ganhou. Sua pontuação foi: ${Sith} pontos`;
+            } else {
+                resultado = "Houve um empate!";
+            }
+
+            $('#pV').html(resultado).animate({ fontSize: '20px' }, 'slow', 'swing');
+
+            $('#pJ').html(j.Nome + '. Teste de força ' + j.Forca);
+            $('#pS').html(s.Nome + ', Teste de força: ' + s.Forca);
+
+            // Exibir as respostas após a luta
+            $('#respostas').show();
+        }
+
+        // Ação de lutar ao clicar no botão
+        $('#lutar').click(function() {
+            $('#respostas').hide(); // Oculta as respostas antes de lutar novamente
+            Lutar();
+        });
+
+        // Função para gerar estrelas aleatórias
+        function gerar_estrelas() {
+            const quantidade_estrelas = 100;
+            const tela = document.body;
+            const largura_tela = tela.offsetWidth;
+            const altura_tela = tela.offsetHeight;
+
+            for (let i = 0; i < quantidade_estrelas; i++) {
+                const estrela = document.createElement('div');
+                estrela.className = 'star';
+                estrela.style.left = Math.random() * largura_tela + 'px';
+                estrela.style.top = Math.random() * altura_tela + 'px';
+                tela.appendChild(estrela);
+            }
+        }
+
+        gerar_estrelas(); // Chamar a função das estrelas
+        
+    </script>
+
+</body>
+</html>
