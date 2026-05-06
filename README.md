@@ -25,4 +25,4 @@ Aplicar conceitos de lógica, eventos e manipulação do DOM.
 
 1. Clone o repositório:
 ```bash
-git clone https://github.com/seu-usuario/js-starwars-battle-simulator.git
+git clone https://github.com/caueesdras02/js-starwars-battle-simulator.git
